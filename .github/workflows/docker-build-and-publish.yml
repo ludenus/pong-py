@@ -37,14 +37,14 @@ jobs:
         id: docker_tag
         run: |
           TAG=$(git describe --tags --always || echo "v0.0.1-unknown")
-          echo "::set-output name=tag::$TAG"
+          echo "tag=$TAG" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/pong-py:${{ steps.docker_tag.outputs.tag }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/pong-py:${{ env.tag }}
 
       - name: Log out from Docker Hub
         run: docker logout
